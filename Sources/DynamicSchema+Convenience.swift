@@ -267,6 +267,28 @@ extension DynamicSchema {
                             valueTypeString += "?"
                             defaultString = " = nil"
                         }
+                    case .URIAttributeType:
+                      valueTypeString = String(describing: URL.self)
+                      if let defaultValue = (attribute.defaultValue as! URL.QueryableNativeType?).flatMap(URL.cs_fromQueryableNativeType) {
+
+                        defaultString = " = URL(string: \(defaultValue.absoluteString))"
+                      }
+                      else if attribute.isOptional {
+
+                        valueTypeString += "?"
+                        defaultString = " = nil"
+                      }
+                    case .UUIDAttributeType:
+                      valueTypeString = String(describing: UUID.self)
+                      if let defaultValue = (attribute.defaultValue as! UUID.QueryableNativeType?).flatMap(UUID.cs_fromQueryableNativeType) {
+
+                        defaultString = " = UUID(uuidString: \(defaultValue.uuidString))"
+                      }
+                      else if attribute.isOptional {
+
+                        valueTypeString += "?"
+                        defaultString = " = nil"
+                      }
 
                     default:
                         fatalError("Unsupported attribute type: \(attribute.attributeType.rawValue)")

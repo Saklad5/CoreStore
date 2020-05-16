@@ -531,24 +531,28 @@ extension NSString: QueryableAttributeType {
 
 extension NSURL: QueryableAttributeType {
     
-    public typealias QueryableNativeType = NSString
+    public typealias QueryableNativeType = NSURL
     
     @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
-        return .stringAttributeType
+        return .URIAttributeType
     }
     
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        return self.init(string: value as String)
+      func forceCast<T: NSURL>(_ value: Any) -> T? {
+
+        return value as? T
+      }
+      return forceCast(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
-        return (self as URL).absoluteString as QueryableNativeType
+        return self
     }
 }
 
@@ -557,24 +561,28 @@ extension NSURL: QueryableAttributeType {
 
 extension NSUUID: QueryableAttributeType {
     
-    public typealias QueryableNativeType = NSString
+    public typealias QueryableNativeType = NSUUID
     
     @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
-        return .stringAttributeType
+        return .UUIDAttributeType
     }
     
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        return self.init(uuidString: value.lowercased)
+      func forceCast<T: NSUUID>(_ value: Any) -> T? {
+
+        return value as? T
+      }
+      return forceCast(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
-        return self.uuidString.lowercased() as QueryableNativeType
+        return self
     }
 }
 
@@ -605,20 +613,20 @@ extension String: QueryableAttributeType {
 
 extension URL: QueryableAttributeType {
     
-    public typealias QueryableNativeType = NSString
+    public typealias QueryableNativeType = NSURL
     
-    public static let cs_rawAttributeType: NSAttributeType = .stringAttributeType
+    public static let cs_rawAttributeType: NSAttributeType = .URIAttributeType
     
     @inline(__always)
     public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> URL? {
         
-        return self.init(string: value as String)
+        return value as URL
     }
     
     @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
-        return self.absoluteString as QueryableNativeType
+        return self as NSURL
     }
 }
 
@@ -626,22 +634,22 @@ extension URL: QueryableAttributeType {
 // MARK: - UUID
 
 extension UUID: QueryableAttributeType {
-    
-    public typealias QueryableNativeType = NSString
-    
-    public static let cs_rawAttributeType: NSAttributeType = .stringAttributeType
-    
-    @inline(__always)
-    public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> UUID? {
-        
-        return self.init(uuidString: value.lowercased)
-    }
-    
-    @inline(__always)
-    public func cs_toQueryableNativeType() -> QueryableNativeType {
-        
-        return self.uuidString.lowercased() as QueryableNativeType
-    }
+
+  public typealias QueryableNativeType = NSUUID
+
+  public static let cs_rawAttributeType: NSAttributeType = .UUIDAttributeType
+
+  @inline(__always)
+  public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> UUID? {
+
+    return value as UUID
+  }
+
+  @inline(__always)
+  public func cs_toQueryableNativeType() -> QueryableNativeType {
+
+    return self as NSUUID
+  }
 }
 
 
